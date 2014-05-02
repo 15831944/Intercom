@@ -1,0 +1,47 @@
+#!/bin/bash
+
+BASE=$PWD
+XCOMP=1
+
+if [ $1 ]
+then
+  echo "[Native Compiling]"
+  export GCC=gcc
+else
+  echo "[Cross Compiling]"
+  TOOLCHAIN="/home/eric/x-tools/arm-unknown-linux-gnueabi/bin"
+  export PATH=$PATH:$TOOLCHAIN
+  export GCC=arm-unknown-linux-gnueabi-gcc
+fi
+
+cd $BASE/picasso
+make clean
+make static
+make install
+
+cd $BASE/sockets
+make clean
+make static
+make install
+
+cd $BASE/intercom
+make clean
+make
+
+if [ -e intercom ]
+then
+  echo "[BUILD SUCCESSFUL]"
+  if [ $1 ]
+  then
+    echo "Just run me now"
+  else
+    echo "[Copying result to target]"
+    #scp intercom root@172.28.77.23:/root/intercom
+    #scp intercom root@192.168.2.106:/root/intercom
+    #scp intercom root@192.168.1.122:/root/intercom
+    #scp intercom root@172.28.77.27:/root/intercom
+    #scp intercom root@192.168.1.119:/root/intercom
+    scp intercom root@192.168.2.101:/root/intercom    
+  fi
+fi
+

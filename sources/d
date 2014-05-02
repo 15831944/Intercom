@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#HOST="172.28.76.147"
+#HOST="192.168.1.110"
+HOST="192.168.2.16"
+DEST="/root"
+
+killall intercom
+rm DEST * -rf
+tftp $HOST -c get sources.tar.gz
+tar xvzf sources.tar.gz
+cd sources
+sh b -native
+mv intercom/intercom $DEST
+mv notify.wav $DEST
+mv alarm.wav $DEST
+cd $DEST
+reboot
+

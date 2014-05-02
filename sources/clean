@@ -1,0 +1,14 @@
+#!/bin/bash
+
+BASE=$PWD
+XCOMP=1
+
+cd $BASE/picasso
+make clean
+
+cd $BASE/sockets
+make clean
+
+cd $BASE/intercom
+make clean
+
