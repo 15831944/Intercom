@@ -1,0 +1,43 @@
+
+1) Get DiskImager (Windows)
+http://sourceforge.net/projects/win32diskimager/
+
+2) Download ArchLinux image for RPI and load image on CF Card. Boot RPI but don't connect 4D display yet.
+http://www.raspberrypi.org/downloads
+
+3) Enable Automatic Logon
+  # cp /usr/lib/systemd/system/getty@.service /etc/systemd/system/autologin@.service
+  # vi /etc/systemd/system/autologin@.service 
+  add "-a root" on the line "ExecStart=-/sbin/agetty --noclear -a USERNAME %I 38400"
+  # systemctl daemon-reload
+  # systemctl disable getty@tty1
+  # systemctl enable autologin@tty1
+  # systemctl start autologin@tty1
+
+  From: https://wiki.archlinux.org/index.php/Automatic_login_to_virtual_console
+
+4) Disable GETTY on AMA0 (so that it doesn't conflict with 4D display):
+  # systemctl disable getty@ttyAMA0
+
+  At this point one can connect 4D display to AMA0 serial port.
+
+5) Install Make, GCC and Alsa Utils
+  # pacman -S make
+  # pacman -S gcc
+  # pacman -S alsa-utils
+  # pacman -S tftp-hpa
+
+6) Copy the sources to local folder, make "b" executable and run it
+  # chmod 577 b
+  # ./b native
+
+7) Change the time zone (https://wiki.archlinux.org/index.php/Time)
+  # timedatectl set-timezone America/Los_Angeles
+
+8a) Install TFTP server on system. Place the sources.tar.gz in server. 
+    Update the "d" script with the Ip of the server and run the script from host (XXX is the IP of the RPI)
+    # ssh root@XXX.XXX.XXX.XXX 'bash -s' < d
+
+
+8b) Copy the sources.tar.gz in the root folder along with the "d" script
+    Comment the "tftp..." line in the "d" script and run it.
